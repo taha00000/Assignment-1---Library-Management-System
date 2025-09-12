@@ -1,0 +1,36 @@
+@model LibraryManagementSystem.Domain.Loan
+@{
+    Layout = "_Layout";
+}
+
+<h1>Loan a Book</h1>
+
+<form asp-action="LoanBook" method="post">
+    <div class="form-group">
+        <label for="bookId">Select Book</label>
+        <select id="bookId" name="bookId" class="form-control">
+            @foreach (var book in ViewBag.Books)
+            {
+                <option value="@book.Id">@book.Title</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="memberId">Select Member</label>
+        <select id="memberId" name="memberId" class="form-control">
+            @foreach (var member in ViewBag.Members)
+            {
+                <option value="@member.Id">@member.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Loan Book" class="btn btn-primary" />
+    </div>
+</form>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,41 @@
+@model IEnumerable<LibraryManagementSystem.Domain.Book>
+@{
+    Layout = "_Layout";
+}
+
+<h1>Books</h1>
+
+<p>
+    <a asp-action="Add" class="btn btn-primary">Add Book</a>
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        @* TODO: Add Authors column here *@
+        <th>Authors</th>
+        <th>ISBN</th>
+        <th>Available</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td>@book.Title</td>
+            @* TODO: Display authors by calling AuthorsToString() method in a cell *@
+            <td>@book.AuthorsToString()</td>
+            <td>@book.ISBN</td>
+            <td>@(book.IsAvailable() ? "Yes" : "No")</td>
+            <td>
+                <a asp-action="Update" asp-route-id="@book.Id" class="btn btn-secondary">Update</a>
+                <form asp-action="Delete" asp-route-id="@book.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

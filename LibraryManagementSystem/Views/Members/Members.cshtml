@@ -1,0 +1,35 @@
+@model IEnumerable<LibraryManagementSystem.Domain.Member>
+@{
+    Layout = "_Layout";
+}
+
+<h1>Members</h1>
+
+<p>
+    <a asp-action="Add" class="btn btn-primary">Add Member</a>
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Loan Count</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var member in Model)
+    {
+        <tr>
+            <td>@member.Name</td>
+            <td>@member.LoanCount</td>
+            <td>
+                <a asp-action="Update" asp-route-id="@member.Id" class="btn btn-secondary">Update</a>
+                <form asp-action="Delete" asp-route-id="@member.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
