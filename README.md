@@ -1,5 +1,7 @@
 ## Introduction
 
+hehe xdd
+
 In this project, we will work on a simple library management system. This is an MVC application written in C#, using asp.net core and entity framework core for persistence in a SQLite database.
 
 C# is an excellent OOP language and efcore is one of the best ORMs available for enterprise software. Students are not expected to be familiar with either of them and code template already takes care of the parts which require some knowledge of these technologies. Instead, students will perform following:
