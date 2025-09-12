@@ -1,0 +1,64 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Check for TODOs
+        run: |
+          if grep -r "TODO" --include \*.cs --include \*.cshtml LibraryManagementSystem > /dev/null; then
+            echo "There are TODOs in the codebase that need to be addressed:"
+            echo ""
+            grep -r "TODO" --include \*.cs --include \*.cshtml LibraryManagementSystem
+            exit 1
+          else
+            echo "No TODOs found."
+          fi
+          
+      - name: Check for migration files
+        run: |
+          if ls LibraryManagementSystem/Migrations/*Authors* 1> /dev/null 2>&1; then
+            echo "File with 'Authors' in its name exists in the Migrations directory."
+          else
+            echo "No file with 'Authors' in its name found in the Migrations directory."
+            exit 1
+          fi
+          if ls LibraryManagementSystem/Migrations/*Indexes* 1> /dev/null 2>&1; then
+            echo "File with 'Indexes' in its name exists in the Migrations directory."
+          else
+            echo "No file with 'Indexes' in its name found in the Migrations directory."
+            exit 1
+          fi
+          
+      - name: Check for migration screenshots
+        run: |
+          if [ -f screenshots/migration_authors.png ] && [ -f screenshots/migration_indexes.png ]; then
+            echo "Both migration screenshots exist."
+          else
+            echo "One or both migration screenshots are missing."
+            exit 1
+          fi
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run xUnit tests
+        run: dotnet test LibraryManagementSystem.Tests/LibraryManagementSystem.Tests.csproj --no-build --verbosity normal
