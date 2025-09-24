@@ -1,0 +1,61 @@
+Summary of Edge Cases Resolved and Tests Added
+
+This document summarizes the validation improvements and new test cases added to the Library Management System application.
+
+=================================
+I. Resolved Edge Cases
+=================================
+
+The following edge cases are now handled to prevent invalid data and ensure data integrity.
+
+---
+1. Author Management
+---
+  - Duplicate Names: The system now prevents adding a new author or updating an existing author to have a name that already exists in the database.
+  - Invalid Names: The 'Name' field for an author is now required and cannot be empty. It is also limited to a maximum length of 100 characters.
+
+---
+2. Book Management
+---
+  - Duplicate ISBNs: The system now prevents adding a new book or updating an existing book to have an ISBN that already exists in the database.
+  - Invalid Data: The 'Title' and 'ISBN' fields for a book are now required and cannot be empty. The Title is limited to 200 characters, and the ISBN must be between 10 and 20 characters.
+
+---
+3. Member Management
+---
+  - Duplicate Names: The system now prevents adding a new member or updating an existing member to have a name that already exists in the database.
+  - Invalid Names: The 'Name' field for a member is now required and cannot be empty. It is also limited to a maximum length of 100 characters.
+
+
+=================================
+II. New Test Cases Added
+=================================
+
+To verify the logic for the resolved edge cases, the following 6 tests were added to the test suite.
+
+---
+1. Tests for AuthorsController (in AuthorsControllerTest.cs)
+---
+  - Add_ShouldReturnView_WhenAuthorNameIsDuplicate:
+      Ensures the application shows an error when trying to add an author with a name that is already in use.
+
+  - Update_ShouldReturnView_WhenAuthorNameIsDuplicate:
+      Ensures the application shows an error when trying to update an author's name to one that is already in use by another author.
+
+---
+2. Tests for BooksController (in BooksControllerTest.cs)
+---
+  - Add_ShouldReturnView_WhenISBNIsDuplicate:
+      Ensures the application shows an error when trying to add a book with an ISBN that is already in use.
+
+  - Update_ShouldReturnView_WhenISBNIsDuplicate:
+      Ensures the application shows an error when trying to update a book's ISBN to one that is already in use by another book.
+
+---
+3. Tests for MembersController (in MembersControllerTest.cs)
+---
+  - Add_ShouldReturnView_WhenMemberNameIsDuplicate:
+      Ensures the application shows an error when trying to add a member with a name that is already in use.
+
+  - Update_ShouldReturnView_WhenMemberNameIsDuplicate:
+      Ensures the application shows an error when trying to update a member's name to one that is already in use by another member.
