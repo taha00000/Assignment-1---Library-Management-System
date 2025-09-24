@@ -109,4 +109,34 @@ public class MembersControllerTest : BaseControllerTest
         Assert.Equal(member, viewResult.Model);
     }
 
+    [Fact]
+    public void Add_ShouldReturnView_WhenMemberNameIsDuplicate()
+    {
+        var existingMember = new Member { Name = "Duplicate Name" };
+        Context.Members.Add(existingMember);
+        Context.SaveChanges();
+
+        var newMember = new Member { Name = "Duplicate Name" };
+        var result = _controller.Add(newMember);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("A member with this name already exists.", _controller.ModelState["Name"].Errors[0].ErrorMessage);
+    }
+
+    [Fact]
+    public void Update_ShouldReturnView_WhenMemberNameIsDuplicate()
+    {
+        var member1 = new Member { Id = 1, Name = "Member 1" };
+        var member2 = new Member { Id = 2, Name = "Member 2" };
+        Context.Members.AddRange(member1, member2);
+        Context.SaveChanges();
+
+        member2.Name = "Member 1";
+        var result = _controller.Update(member2);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("A member with this name already exists.", _controller.ModelState["Name"].Errors[0].ErrorMessage);
+    }
 }

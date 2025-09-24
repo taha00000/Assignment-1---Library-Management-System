@@ -20,7 +20,10 @@ public class LibraryContext(DbContextOptions<LibraryContext> options) : DbContex
         // separately.
         modelBuilder.Entity<Loan>().HasIndex(m => m.ReturnDate);
         // DO NOT MODIFY ABOVE THIS LINE
-        // TODO: 7. Add indexes for Book.Title, Book.ISBN, Author.Name
+        // Add indexes for Book.Title, Book.ISBN, Author.Name
+        modelBuilder.Entity<Book>().HasIndex(b => b.Title);
+        modelBuilder.Entity<Book>().HasIndex(b => b.ISBN);
+        modelBuilder.Entity<Author>().HasIndex(a => a.Name);
         
         // DO NOT MODIFY BELOW THIS LINE
     }

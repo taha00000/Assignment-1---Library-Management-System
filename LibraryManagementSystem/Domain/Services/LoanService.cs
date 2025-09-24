@@ -21,11 +21,20 @@ namespace LibraryManagementSystem.Domain.Services
             };
             // DO NOT MODIFY ABOVE THIS LINE
 
-            // TODO: 3.1 Check if book is available for loan. If not, throw and InvalidOperationException with the message "The book is not available for loan."
+            // Check if book is available for loan. If not, throw InvalidOperationException
+            if (!book.IsAvailable())
+            {
+                throw new InvalidOperationException("The book is not available for loan.");
+            }
 
-            // TODO: 3.2 Check if member can borrow. If not, throw an InvalidOperationException with the message "The member has reached their borrowing limit."
+            // Check if member can borrow. If not, throw InvalidOperationException
+            if (!member.CanBorrow())
+            {
+                throw new InvalidOperationException("The member has reached their borrowing limit.");
+            }
 
-            // TODO: 3.3 Finally call the RecordLoan method on the member object and pass the loan object as an argument
+            // Record the loan on the member
+            member.RecordLoan(loan);
 
             // DO NOT MODIFY BELOW THIS LINE
 

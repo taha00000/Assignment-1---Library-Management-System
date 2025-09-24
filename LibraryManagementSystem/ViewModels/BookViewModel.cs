@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using LibraryManagementSystem.Domain;
 
 namespace LibraryManagementSystem.ViewModels
@@ -9,7 +10,11 @@ namespace LibraryManagementSystem.ViewModels
     public class BookViewModel
     {
         public int Id { get; set; }
+        [Required]
+        [StringLength(200)]
         public string Title { get; set; } = default!;
+        [Required]
+        [StringLength(20, MinimumLength = 10)] // ISBN-10 or ISBN-13
         public string ISBN { get; set; } = default!;
         public List<int>? SelectedAuthorIds { get; set; } = new List<int>();
         public List<Author> AvailableAuthors { get; set; } = new List<Author>();

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManagementSystem.Domain
 {
     public class Member : BaseModel
     {
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; } = default!;
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
 
@@ -14,9 +17,9 @@ namespace LibraryManagementSystem.Domain
         public virtual bool CanBorrow()
         {
             // DO NOT MODIFY ABOVE THIS LINE
-            // TODO: 2. return true if the member has less than 3 loans that have not been returned
-
-            throw new NotImplementedException("Member.CanBorrow is not implemented");
+            // return true if the member has less than 3 loans that have not been returned
+            var activeLoanCount = Loans.Count(l => l.ReturnDate == null);
+            return activeLoanCount < 3;
             // DO NOT MODIFY BELOW THIS LINE
         }
 

@@ -24,6 +24,11 @@ public class MembersController(LibraryContext context) : Controller
     [HttpPost]
     public IActionResult Add(Member member)
     {
+        if (context.Members.Any(m => m.Name == member.Name))
+        {
+            ModelState.AddModelError("Name", "A member with this name already exists.");
+        }
+
         if (ModelState.IsValid)
         {
             context.Members.Add(member);
@@ -60,6 +65,11 @@ public class MembersController(LibraryContext context) : Controller
     [HttpPost]
     public IActionResult Update(Member member)
     {
+        if (context.Members.Any(m => m.Name == member.Name && m.Id != member.Id))
+        {
+            ModelState.AddModelError("Name", "A member with this name already exists.");
+        }
+
         if (ModelState.IsValid)
         {
             context.Members.Update(member);

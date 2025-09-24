@@ -105,4 +105,35 @@ public class AuthorsControllerTest : BaseControllerTest
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal(author, viewResult.Model);
     }
+
+    [Fact]
+    public void Add_ShouldReturnView_WhenAuthorNameIsDuplicate()
+    {
+        var existingAuthor = new Author { Name = "Duplicate Name" };
+        Context.Authors.Add(existingAuthor);
+        Context.SaveChanges();
+
+        var newAuthor = new Author { Name = "Duplicate Name" };
+        var result = _controller.Add(newAuthor);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("An author with this name already exists.", _controller.ModelState["Name"].Errors[0].ErrorMessage);
+    }
+
+    [Fact]
+    public void Update_ShouldReturnView_WhenAuthorNameIsDuplicate()
+    {
+        var author1 = new Author { Id = 1, Name = "Author 1" };
+        var author2 = new Author { Id = 2, Name = "Author 2" };
+        Context.Authors.AddRange(author1, author2);
+        Context.SaveChanges();
+
+        author2.Name = "Author 1";
+        var result = _controller.Update(author2);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("An author with this name already exists.", _controller.ModelState["Name"].Errors[0].ErrorMessage);
+    }
 }

@@ -1,13 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace LibraryManagementSystem.Domain;
 
 public class Author : BaseModel
 {
     // DO NOT MODIFY ABOVE THIS LINE
-    // TODO: 4.1 Add public Name property here with type 'string?' (nullable string)
+    // Add public Name property here with type 'string?' (nullable string)
+    [Required]
+    [StringLength(100)]
+    public string? Name { get; set; }
 
-    // TODO: 4.2 Add public Books property here with type 'ICollection<Book>' (collection of Book)
+    // Add public Books property here with type 'ICollection<Book>' (collection of Book)
     // An author may have written multiple books.
     // This will make the relationship between Book and Author many-to-many
+    public ICollection<Book> Books { get; set; } = new List<Book>();
     
     // DO NOT MODIFY BELOW THIS LINE
 
@@ -18,8 +24,17 @@ public class Author : BaseModel
         // If the author has multiple books, the names should be separated by commas and the last name should be preceded by 'and'
         // If the author has only one book, the name should be returned as is
         // If the author has no books, an empty string should be returned
-        // TODO: 4.3 Implement the BooksToString method
-        throw new NotImplementedException("Author.BooksToString is not implemented");
+        var titles = Books
+            .Select(b => b.Title)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .ToList();
+
+        if (titles.Count == 0) return string.Empty;
+        if (titles.Count == 1) return titles[0];
+        if (titles.Count == 2) return $"{titles[0]} and {titles[1]}";
+
+        var allButLast = string.Join(", ", titles.Take(titles.Count - 1));
+        return $"{allButLast} and {titles.Last()}";
         // DO NOT MODIFY BELOW THIS LINE
     }
 }

@@ -124,4 +124,35 @@ public class BooksControllerTest : BaseControllerTest
 
         Assert.IsType<NotFoundResult>(result);
     }
+
+    [Fact]
+    public void Add_ShouldReturnView_WhenISBNIsDuplicate()
+    {
+        var existingBook = new Book { Title = "Existing Book", ISBN = "1234567890" };
+        Context.Books.Add(existingBook);
+        Context.SaveChanges();
+
+        var newBookViewModel = new BookViewModel { Title = "Some title", ISBN = "1234567890" };
+        var result = _controller.Add(newBookViewModel);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("A book with this ISBN already exists.", _controller.ModelState["ISBN"].Errors[0].ErrorMessage);
+    }
+
+    [Fact]
+    public void Update_ShouldReturnView_WhenISBNIsDuplicate()
+    {
+        var book1 = new Book { Id = 1, Title = "Book One", ISBN = "1111111111" };
+        var book2 = new Book { Id = 2, Title = "Book Two", ISBN = "2222222222" };
+        Context.Books.AddRange(book1, book2);
+        Context.SaveChanges();
+
+        var viewModel = new BookViewModel { Id = 2, Title = "Some title", ISBN = "1111111111" };
+        var result = _controller.Update(viewModel);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.False(_controller.ModelState.IsValid);
+        Assert.Equal("A book with this ISBN already exists.", _controller.ModelState["ISBN"].Errors[0].ErrorMessage);
+    }
 }

@@ -13,7 +13,8 @@ public class BooksController(LibraryContext context) : Controller
         var books = context.Books
             .Include(b => b.Loans.Where(l => l.ReturnDate == null))
             // DO NOT MODIFY ABOVE THIS LINE
-            // TODO: 10. Include Authors in the query
+            // Include Authors in the query
+            .Include(b => b.Authors)
             // Notice: We will have to use SQL Joins if we were not using ORM like Entity Framework
             
             // DO NOT MODIFY BELOW THIS LINE
@@ -33,6 +34,11 @@ public class BooksController(LibraryContext context) : Controller
     [HttpPost]
     public IActionResult Add(BookViewModel model)
     {
+        if (context.Books.Any(b => b.ISBN == model.ISBN))
+        {
+            ModelState.AddModelError("ISBN", "A book with this ISBN already exists.");
+        }
+
         if (ModelState.IsValid)
         {
             var book = new Book
@@ -70,6 +76,11 @@ public class BooksController(LibraryContext context) : Controller
     [HttpPost]
     public IActionResult Update(BookViewModel model)
     {
+        if (context.Books.Any(b => b.ISBN == model.ISBN && b.Id != model.Id))
+        {
+            ModelState.AddModelError("ISBN", "A book with this ISBN already exists.");
+        }
+
         if (ModelState.IsValid)
         {
             var book = context.Books.Include(b => b.Authors).FirstOrDefault(b => b.Id == model.Id);
